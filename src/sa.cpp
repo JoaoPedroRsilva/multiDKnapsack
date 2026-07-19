@@ -1,53 +1,47 @@
-#include "../include/sa.hpp"
+#include "../include/sa.h"
 #include <cmath>
 #include <random>
-#include <iostream>
 
-// Reuso do gerador de numeros aleatorios
-static std::mt19937 rng(std::random_device{}());
+static std::mt19937 rng( std::random_device{}() );
 
-SimulatedAnnealing::SimulatedAnnealing(double t0, double alpha, double t_min, int L)
-    : initial_temp(t0), cooling_rate(alpha), final_temp(t_min), iterations_per_temp(L) {}
+SimulatedAnnealing::SimulatedAnnealing( double t0, double alpha, double tMin, int L ){
+    this->initialTemp = t0;
+    this->coolingRate = alpha;
+    this->finalTemp = tMin;
+    this->iterationsPerTemp = L;
+}
 
-Solution SimulatedAnnealing::run(const Instance& inst) {
-    // 1. Inicializa solucao vazia (todos os itens desmarcados, 100% viavel)
-    Solution S(inst.n);
-    S.repair(inst); // Garante que esta devidamente inicializada e avaliada
+Solution SimulatedAnnealing::run( const Instance& inst ){
+    Solution currentSol( inst.n );
+    currentSol.repair( inst );
     
-    Solution S_best = S;
-    double T = initial_temp;
+    Solution bestSol = currentSol;
+    double T = this->initialTemp;
     
-    std::uniform_real_distribution<double> dist(0.0, 1.0);
+    std::uniform_real_distribution<double> dist( 0.0, 1.0 );
 
-    // Loop principal de temperatura
-    while (T > final_temp) {
-        for (int step = 0; step < iterations_per_temp; ++step) {
-            // Gera solucao vizinha
-            Solution S_new = S;
-            S_new.generate_neighbor(inst);
+    while( T > this->finalTemp ){
+        for( int step = 0; step < this->iterationsPerTemp; step++ ){
+            Solution newSol = currentSol;
+            newSol.generateNeighbor( inst );
 
-            // Calcula a diferenca de energia (lucro)
-            // Queremos MAXIMIZAR o lucro, entao delta_E positivo indica melhora
-            double delta_E = S_new.total_profit - S.total_profit;
+            double deltaE = newSol.totalProfit - currentSol.totalProfit;
 
-            if (delta_E > 0) {
-                // Melhora sempre e aceita
-                S = S_new;
-                if (S.total_profit > S_best.total_profit) {
-                    S_best = S;
+            if( deltaE > 0 ){
+                currentSol = newSol;
+                if( currentSol.totalProfit > bestSol.totalProfit ){
+                    bestSol = currentSol;
                 }
             } else {
-                // Pioras sao aceitas com uma probabilidade termodinamica
-                double p = std::exp(delta_E / T);
-                if (dist(rng) < p) {
-                    S = S_new;
+                double p = std::exp( deltaE / T );
+                if( dist( rng ) < p ){
+                    currentSol = newSol;
                 }
             }
         }
         
-        // Resfriamento geometrico
-        T *= cooling_rate;
+        T *= this->coolingRate;
     }
 
-    return S_best;
+    return bestSol;
 }
