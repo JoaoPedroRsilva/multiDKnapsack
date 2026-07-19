@@ -1,0 +1,10 @@
+# Executáveis
+multi_knapsack
+
+# Arquivos objeto compilados
+src/*.o
+*.o
+
+# Logs e arquivos temporários
+*.log
+.DS_Store
