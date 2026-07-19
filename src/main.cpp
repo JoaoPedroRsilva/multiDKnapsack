@@ -39,7 +39,7 @@ void runSingleInstance( const Instance& inst, double t0, double alpha, double tM
     if( bestSol.isValid ){
         std::cout << "Solucao VIAVEL (Nenhuma capacidade de recurso foi estourada).\n";
     } else {
-        std::cout << "AVISO: Solucao INVIABEL (Estouro de recursos!)\n";
+        std::cout << "AVISO: Solucao INVIAVEL (Estouro de recursos!)\n";
     }
 
     if( inst.optimalValue > 0 ){
@@ -98,9 +98,9 @@ void runBatchInstances( const std::vector<Instance>& instances, double t0, doubl
         std::cout << " Concluido (" << duration.count() << " ms)\n";
     }
 
-    std::cout << "\n### TABELA DE RESULTADOS (Pronta para o Relatorio)\n\n";
-    std::cout << "| Inst. |  n  |  m  | Opt. Teorico | Lucro Encontrado | Qualidade (%) | Tempo (ms) | Viavel |\n";
-    std::cout << "|-------|-----|-----|--------------|------------------|---------------|------------|--------|\n";
+    std::cout << "\n### TABELA DE RESULTADOS \n\n";
+    std::cout << "| Inst. |  n  |  m  | Otimo Teorico | Lucro Encontrado | Qualidade (%) | Tempo (ms) | Viavel |\n";
+    std::cout << "|-------|-----|-----|---------------|------------------|---------------|------------|--------|\n";
     
     double sumQuality = 0.0;
     double sumTime = 0.0;
@@ -148,8 +148,7 @@ void runBatchInstances( const std::vector<Instance>& instances, double t0, doubl
 
 int main(){
     std::cout << "======================================================\n";
-    std::cout << "   RESOLVEDOR DE MOCHILA MULTIDIMENSIONAL (MKP)\n";
-    std::cout << "             Simulated Annealing C++\n";
+    std::cout << "   RESOLVEDOR DE MOCHILA MULTIDIMENSIONAL \n";
     std::cout << "======================================================\n\n";
 
     std::string filename;
@@ -174,7 +173,7 @@ int main(){
 
     std::cout << "\n--- Parametros do Simulated Annealing ---\n";
     std::cout << "Deseja usar os parametros padrao (T0=1000, alpha=0.98, T_min=0.01, L=1000)?\n";
-    std::cout << "1. Sim (Recomendado)\n2. Nao (Personalizar)\n";
+    std::cout << "1. Sim\n2. Nao\n";
     int paramChoice = getMenuChoice( 1, 2 );
 
     if( paramChoice == 2 ){
